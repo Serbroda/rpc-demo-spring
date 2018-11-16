@@ -1,0 +1,13 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+      "outFile": "src/main/resources/static/js/dist/bundle.js"
+  },
+  "include": [
+      "src/main/resources/static/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/",
+    "src/main/resources/static/**/*.d.ts"
+  ]
+}
