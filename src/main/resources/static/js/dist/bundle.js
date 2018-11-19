@@ -8,19 +8,26 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-/// <reference path="../@types/jquery.d.ts"/>
-/// <reference path="./RpcReceiver.ts"/>
 var RpcService = /** @class */ (function () {
     function RpcService(url) {
         this.url = url;
     }
-    RpcService.prototype.fire = function (request, receiver) {
+    return RpcService;
+}());
+/// <reference path="../@types/jquery.d.ts"/>
+/// <reference path="./RpcReceiver.ts"/>
+/// <reference path="./RpcService.ts"/>
+var RpcAjaxService = /** @class */ (function (_super) {
+    __extends(RpcAjaxService, _super);
+    function RpcAjaxService(url) {
+        return _super.call(this, url) || this;
+    }
+    RpcAjaxService.prototype.fire = function (request, receiver) {
         var requestData = {
             id: request.id,
             method: request.method,
             params: request.params
         };
-        console.log("Call", JSON.stringify(requestData));
         $.ajax({
             type: "POST",
             url: this.url,
@@ -41,35 +48,31 @@ var RpcService = /** @class */ (function () {
             }
         });
     };
-    return RpcService;
-}());
-/// <reference path="./core/RpcService.ts"/>
+    return RpcAjaxService;
+}(RpcService));
+/// <reference path="./core/RpcAjaxService.ts"/>
 var HelloRpcService = /** @class */ (function (_super) {
     __extends(HelloRpcService, _super);
     function HelloRpcService() {
         return _super.call(this, "http://localhost:52693/rpc/hello") || this;
     }
-    HelloRpcService.prototype.sayHello = function (name, receiver) {
+    HelloRpcService.prototype.sayHello = function (param1, param2, param3) {
+        var _params = null;
+        var _receiver = null;
+        if (typeof param2 === "string" || typeof param2 === "number") {
+            _params = [param1, param2];
+            _receiver = param3;
+        }
+        else {
+            _params = [param1];
+            _receiver = param2;
+        }
         this.fire({
             id: 0,
             method: "sayHello",
-            params: [name]
-        }, receiver);
-    };
-    HelloRpcService.prototype.sayHello2 = function (firstName, lastName, receiver) {
-        this.fire({
-            id: 0,
-            method: "sayHello",
-            params: [firstName, lastName]
-        }, receiver);
-    };
-    HelloRpcService.prototype.sayHello3 = function (firstName, age, receiver) {
-        this.fire({
-            id: 0,
-            method: "sayHello",
-            params: [firstName, age]
-        }, receiver);
+            params: _params
+        }, _receiver);
     };
     return HelloRpcService;
-}(RpcService));
+}(RpcAjaxService));
 var helloRpcService = new HelloRpcService();

@@ -30,25 +30,45 @@
 	<div class="container-fluid">
 		<h1>RPC Demo Spring</h1>
 		
-		<input id="tbName" type="text" placeholder="Name"/>
-		<button onclick="testUseClass()">RPC Call</button> <br/><br/>
-		Ergebnis: <span id="lbHello"></span>
+		<input id="tbFirstName" type="text" placeholder="First name" value="Max"/>
+		<input id="tbLastName" type="text" placeholder="Last name" value="Musternamm" style="margin-left: 5px"/> 
+		<input id="tbAge" type="number" placeholder="Age" value="32" style="margin-left: 5px"/> 
+		<br/><br/>
+		<fieldset>
+		    <input type="radio" id="rbSayHello1" name="rgSayHello" checked="checked"/>
+		    <label for="rbSayHello1"> String sayHello(String name)</label> <br/>
+		    <input type="radio" id="rbSayHello2" name="rgSayHello" />
+		    <label for="rbSayHello2"> String sayHello(String firstName, String lastName)</label> <br/>
+		    <input type="radio" id="rbSayHello3" name="rgSayHello" />
+		    <label for="rbSayHello3"> String sayHello(String firstName, int age)</label> <br/>
+		  </fieldset>
+		
+		
+		<button onclick="rpc()">Start RPC Call</button> <br/><br/>
+		Server response: <i id="lbResponse"></i>
 	</div>
 
 	<script type="text/javascript" th:inline="javascript">
 		//<![CDATA[
-			function testUseClass() {
-				helloRpcService.sayHello3($('#tbName').val(), 32, {
-					onSuccess: function(data) {
-						console.log('Success', data);
-						$('#lbHello').text(data.result);
-					}, 
-					onFailure: function(error){
-						console.log('Error', error);
-					}
-				});
-			}
+			var receiver = {
+				onSuccess: function(data) {
+					console.log('Success', data);
+					$('#lbResponse').text(data.result);
+				}, 
+				onFailure: function(error){
+					console.log('Error', error);
+				}
+			};
 			
+			function rpc() {
+				if($('#rbSayHello1').is(':checked')) {
+					helloRpcService.sayHello($('#tbFirstName').val(), receiver);
+				} else if($('#rbSayHello2').is(':checked')) {
+					helloRpcService.sayHello($('#tbFirstName').val(), $('#tbLastName').val(), receiver);
+				} else {
+					helloRpcService.sayHello($('#tbFirstName').val(), parseInt($('#tbAge').val()), receiver);
+				}
+			}
 		//]]>
 	</script>
 

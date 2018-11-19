@@ -12,17 +12,21 @@ public class HelloRpcServiceImpl implements HelloRpcService {
 
 	@Override
 	public String sayHello(String name) {
-		return "Hello " + name;
+		return createGreeting("Welcome", name);
 	}
 
 	@Override
 	public String sayHello(String firstName, String lastName) {
-		return sayHello(firstName + " " + lastName);
+		return createGreeting("Hello", firstName + " " + lastName);
 	}
 
 	@Override
 	public String sayHello(String firstName, int age) {
-		return sayHello(age + " Jahre alter " + firstName);
+		return createGreeting("Hi", firstName + " (" + age + " y/o)");
+	}
+	
+	private String createGreeting(String greeting, String val) {
+		return greeting + " " + val;
 	}
 
 }
